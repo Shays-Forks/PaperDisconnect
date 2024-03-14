@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "com.cookies250.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"GameMenuScreenMixin",
+		"PressableWidgetAccessor"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

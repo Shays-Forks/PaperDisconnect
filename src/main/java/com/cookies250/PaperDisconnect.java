@@ -10,15 +10,26 @@ import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.option.KeyBinding;
+
 
 public class PaperDisconnect implements ClientModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger("paperdisconnect");
 	public static MinecraftClient mc = MinecraftClient.getInstance();
-
 	@Override
 	public void onInitializeClient() {
 		LOGGER.info("Initializing PaperDisconnect");
-
+		var illegalDisconnect = new KeyBinding("Illegal Disconnect",-1,"Paper Disconnect");
+		KeyBindingHelper.registerKeyBinding(illegalDisconnect);
+		ClientTickEvents.END_CLIENT_TICK.register(c-> {
+			if(illegalDisconnect.isPressed()){
+				disconnect(null);
+			}
+			
+		}
+				);
 	}
 
 	public static void disconnect(ButtonWidget buttonWidget) {
@@ -28,4 +39,7 @@ public class PaperDisconnect implements ClientModInitializer {
 		networkHandler.sendPacket(new UpdateSelectedSlotC2SPacket(10));
 		clientConnection.flush();
 	}
+	
+	
+	
 }
